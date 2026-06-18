@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bodas — Javier Guaima Violinista</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #b67352; --gold-light: #fceed0; --gold-dark: #8a4e30;
+    --black: #170807; --dark: #1c0a07; --dark2: #261008; --dark3: #2f1509;
+    --cream: #F5F0E8; --white: #FFFFFF; --text-light: #c9b09a; --text-muted: #8a6555;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Open Sans',sans-serif; background:var(--dark); color:var(--cream); overflow-x:hidden; }
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:0 5%; height:70px; background:rgba(23,8,7,0.95); backdrop-filter:blur(12px); border-bottom:1px solid rgba(182,115,82,0.2); }
+  .nav-logo { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--gold); text-decoration:none; }
+  .nav-logo span { font-style:italic; color:var(--cream); }
+  .nav-links { display:flex; gap:2rem; list-style:none; }
+  .nav-links a { font-size:0.78rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-light); text-decoration:none; transition:color 0.3s; }
+  .nav-links a:hover { color:var(--gold); }
+  .nav-cta { color:var(--black)!important; background:var(--gold); padding:0.55rem 1.3rem; border-radius:2px; }
+  .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; }
+  .hamburger span { display:block; width:24px; height:2px; background:var(--gold); }
+
+  /* HERO */
+  .event-hero {
+    position:relative; min-height:70vh;
+    display:flex; align-items:flex-end;
+    overflow:hidden;
+  }
+  .event-hero-bg {
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:18rem; opacity:0.04;
+    user-select:none; pointer-events:none;
+  }
+  .event-hero-overlay {
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(23,8,7,0.3) 0%, rgba(23,8,7,0.95) 100%);
+  }
+  .event-hero-content {
+    position:relative; z-index:2;
+    padding:2rem 5% 5rem;
+    max-width:800px;
+  }
+  .breadcrumb { display:flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem; }
+  .breadcrumb a { font-size:0.72rem; color:var(--text-muted); text-decoration:none; letter-spacing:0.1em; transition:color 0.3s; }
+  .breadcrumb a:hover { color:var(--gold); }
+  .breadcrumb span { font-size:0.72rem; color:var(--text-muted); }
+  .eyebrow { font-size:0.7rem; font-weight:600; letter-spacing:0.35em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .event-title { font-family:'Playfair Display',serif; font-size:clamp(3rem,8vw,5.5rem); color:var(--white); line-height:1; }
+  .event-title em { font-style:italic; color:var(--gold); display:block; }
+  .event-tagline { font-size:1rem; color:var(--text-light); margin-top:1.2rem; max-width:550px; line-height:1.7; font-style:italic; }
+
+  /* COLOR ACCENT BAR */
+  .accent-bar { height:3px; background:linear-gradient(90deg, var(--gold) 0%, transparent 100%); }
+
+  /* CONTENT */
+  .event-content { max-width:1100px; margin:0 auto; padding:5rem 5%; }
+
+  .content-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start; }
+  .content-grid.reverse { direction:rtl; }
+  .content-grid.reverse > * { direction:ltr; }
+
+  .event-section-label { font-size:0.68rem; font-weight:600; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:0.8rem; }
+  .event-section-title { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,2.5rem); color:var(--white); margin-bottom:1.5rem; line-height:1.2; }
+  .event-section-title em { font-style:italic; color:var(--gold); }
+  .event-text p { font-size:0.9rem; color:var(--text-light); line-height:1.9; margin-bottom:1.2rem; }
+
+  /* MOMENTS LIST */
+  .moments-list { list-style:none; margin-top:1.5rem; }
+  .moments-list li {
+    display:flex; align-items:center; gap:1rem;
+    padding:0.9rem 0;
+    border-bottom:1px solid rgba(182,115,82,0.08);
+    font-size:0.85rem; color:var(--text-light);
+  }
+  .moments-list li:last-child { border-bottom:none; }
+  .moment-icon { font-size:1.2rem; flex-shrink:0; width:2rem; text-align:center; }
+  .moment-name { font-weight:600; color:var(--white); }
+  .moment-desc { font-size:0.78rem; color:var(--text-muted); margin-top:0.15rem; }
+
+  /* PHOTO GRID */
+  .photo-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .photo-grid .photo-tall { grid-row:span 2; }
+  .photo-item {
+    background:var(--dark3);
+    border:1px solid rgba(182,115,82,0.1);
+    border-radius:3px;
+    aspect-ratio:4/3;
+    display:flex; align-items:center; justify-content:center;
+    font-size:3rem;
+    color:rgba(182,115,82,0.15);
+    overflow:hidden;
+    position:relative;
+  }
+  .photo-tall { aspect-ratio:unset; }
+  .photo-item img {
+    width:100%; height:100%; object-fit:cover;
+    position:absolute; inset:0;
+    display:none; /* shown when real photos loaded */
+  }
+  .photo-placeholder { font-size:2.5rem; opacity:0.15; }
+
+  /* REPERTORIO PREVIEW */
+  .repertorio-preview { margin-top:5rem; padding-top:4rem; border-top:1px solid rgba(182,115,82,0.1); }
+  .rep-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1px; background:rgba(182,115,82,0.08); border:1px solid rgba(182,115,82,0.1); border-radius:3px; overflow:hidden; margin-top:2rem; }
+  .rep-item { background:var(--dark2); padding:1.2rem 1.5rem; }
+  .rep-song { font-weight:600; color:var(--white); font-size:0.85rem; }
+  .rep-artist { font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem; }
+
+  /* CTA */
+  .event-cta {
+    margin-top:4rem;
+    background:var(--dark2);
+    border:1px solid rgba(182,115,82,0.15);
+    border-radius:4px;
+    padding:3rem;
+    text-align:center;
+  }
+  .event-cta h3 { font-family:'Playfair Display',serif; font-size:2rem; color:var(--white); margin-bottom:0.8rem; }
+  .event-cta h3 em { font-style:italic; color:var(--gold); }
+  .event-cta p { font-size:0.88rem; color:var(--text-light); max-width:450px; margin:0 auto 2rem; line-height:1.7; }
+  .cta-actions { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+  .btn-primary { display:inline-block; font-size:0.75rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--black); background:var(--gold); padding:0.9rem 2.2rem; border-radius:2px; text-decoration:none; transition:all 0.3s; border:1px solid var(--gold); }
+  .btn-primary:hover { background:var(--gold-light); transform:translateY(-2px); }
+  .btn-outline { display:inline-block; font-size:0.75rem; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); background:transparent; padding:0.9rem 2.2rem; border-radius:2px; text-decoration:none; border:1px solid rgba(182,115,82,0.4); transition:all 0.3s; }
+  .btn-outline:hover { border-color:var(--gold); background:rgba(182,115,82,0.08); transform:translateY(-2px); }
+
+  /* OTHER SERVICES */
+  .other-services { margin-top:5rem; }
+  .services-strip { display:flex; gap:1rem; overflow-x:auto; padding-bottom:1rem; }
+  .service-pill {
+    flex-shrink:0;
+    display:flex; align-items:center; gap:0.6rem;
+    background:var(--dark2); border:1px solid rgba(182,115,82,0.12);
+    border-radius:2px; padding:0.8rem 1.2rem;
+    text-decoration:none; color:var(--text-light);
+    font-size:0.78rem; font-weight:600;
+    letter-spacing:0.05em;
+    transition:all 0.3s;
+    white-space:nowrap;
+  }
+  .service-pill:hover { border-color:var(--gold); color:var(--gold); background:rgba(182,115,82,0.05); }
+
+  footer { background:var(--black); padding:3rem 5%; border-top:1px solid rgba(182,115,82,0.15); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem; }
+  .footer-logo { font-family:'Playfair Display',serif; font-size:1rem; color:var(--gold); text-decoration:none; }
+  .footer-logo span { font-style:italic; color:var(--text-muted); }
+  .footer-copy { font-size:0.72rem; color:var(--text-muted); width:100%; text-align:center; padding-top:1.5rem; border-top:1px solid rgba(255,255,255,0.05); margin-top:1rem; }
+
+  @media (max-width:768px) {
+    .nav-links { display:none; flex-direction:column; position:absolute; top:70px; left:0; right:0; background:var(--dark); padding:1rem 5%; gap:1rem; }
+    .nav-links.open { display:flex; }
+    .hamburger { display:flex; }
+    .content-grid { grid-template-columns:1fr; gap:2.5rem; }
+    .content-grid.reverse { direction:ltr; }
+    .photo-grid { grid-template-columns:1fr; }
+    .photo-tall { grid-row:auto; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Javier Guaima <span>· Violinista</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html#servicios">Servicios</a></li>
+    <li><a href="index.html#sobre-mi">Sobre Mí</a></li>
+    <li><a href="repertorio.html">Repertorio</a></li>
+    <li><a href="cotizar.html" class="nav-cta">Cotiza tu Evento</a></li>
+  </ul>
+  <div class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Dynamic hero populated by JS -->
+<div class="event-hero" id="eventHero">
+  <div class="event-hero-bg" id="heroBg"></div>
+  <div class="event-hero-overlay"></div>
+  <div class="event-hero-content">
+    <div class="breadcrumb">
+      <a href="index.html">Inicio</a>
+      <span>/</span>
+      <a href="index.html#servicios">Servicios</a>
+      <span>/</span>
+      <span id="breadcrumbName"></span>
+    </div>
+    <p class="eyebrow" id="heroEyebrow"></p>
+    <h1 class="event-title" id="eventTitle"></h1>
+    <p class="event-tagline" id="eventTagline"></p>
+  </div>
+</div>
+<div class="accent-bar"></div>
+
+<!-- Content -->
+<div class="event-content">
+  <div class="content-grid">
+    <div class="event-text" id="eventDescription"></div>
+    <div>
+      <div class="photo-grid" id="photoGrid"></div>
+    </div>
+  </div>
+
+  <!-- Moments / Moments list -->
+  <div style="margin-top:4rem;" id="momentsSection"></div>
+
+  <!-- Repertorio preview -->
+  <div class="repertorio-preview" id="repertorioSection"></div>
+
+  <!-- CTA -->
+  <div class="event-cta">
+    <h3>¿Tu evento es <em>especial</em>?</h3>
+    <p>Hablemos de lo que imaginas y lo hacemos realidad. Cada celebración merece una banda sonora perfecta.</p>
+    <div class="cta-actions">
+      <a href="cotizar.html" class="btn-primary">Cotiza este Evento</a>
+      <a href="repertorio.html" class="btn-outline">Ver Repertorio</a>
+    </div>
+  </div>
+
+  <!-- Other services -->
+  <div class="other-services">
+    <p class="event-section-label">Otros Servicios</p>
+    <div class="services-strip" id="servicesStrip"></div>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="footer-logo">Javier Guaima <span>· Violinista Profesional</span></a>
+  <div class="footer-copy">© 2025 Javier Guaima · Violinista Profesional.</div>
+</footer>
+
+<script>
+const EVENTS = {
+  'bodas': {
+    eyebrow: 'Música para Bodas',
+    titleMain: 'Bodas',
+    titleEm: 'Donde el Amor Suena',
+    tagline: '"El violín es el instrumento que más se acerca a la voz humana… y al corazón enamorado."',
+    icon: '',
+    heroBg: 'linear-gradient(135deg, #2a0e08 0%, #2a1a0e 100%)',
+    description: `
+      <p class="event-section-label">El Día Más Especial</p>
+      <h2 class="event-section-title">Música que <em>Emociona</em></h2>
+      <div class="event-text">
+        <p>Tu boda merece una banda sonora que cuente vuestra historia. Con mi violín, cada momento —desde la entrada de la novia hasta el vals y la despedida— se convierte en un recuerdo eterno grabado en el corazón de todos los presentes.</p>
+        <p>Ofrezco música en vivo para todas las etapas de la ceremonia y recepción, adaptando el repertorio a vuestros gustos: desde música clásica y romántica hasta versiones emotivas de canciones contemporáneas.</p>
+        <p>Mi experiencia en cientos de bodas me permite leer el ambiente y ofrecer exactamente lo que el momento necesita, sin necesidad de indicaciones constantes.</p>
+      </div>
+    `,
+    moments: [
+      { icon:'', name:'Entrada de la Novia', desc:'El momento más emotivo del día, con la melodía perfecta' },
+      { icon:'', name:'Ceremonia', desc:'Música de fondo suave y envolvente durante los votos' },
+      { icon:'', name:'Votos Matrimoniales', desc:'Canciones que acompañan las palabras del corazón' },
+      { icon:'', name:'Cóctel de Bienvenida', desc:'Música ambiental elegante para la recepción' },
+      { icon:'', name:'Vals Nupcial', desc:'La primera pieza como esposos, mágica e irrepetible' },
+      { icon:'', name:'Salida de los Novios', desc:'Despedida festiva y memorable' },
+    ],
+    repertorio: [
+      { song:'Canon en Re', artist:'Pachelbel' },
+      { song:'A Thousand Years', artist:'Christina Perri' },
+      { song:'Perfect', artist:'Ed Sheeran' },
+      { song:'Ave María', artist:'Schubert' },
+      { song:'Can\'t Help Falling in Love', artist:'Elvis Presley' },
+      { song:'All of Me', artist:'John Legend' },
+    ]
+  },
+  'cumpleanos': {
+    eyebrow: 'Música para Cumpleaños',
+    titleMain: 'Cumpleaños',
+    titleEm: 'Celebra con Música',
+    tagline: '"Cada cumpleaños es una nueva melodía en el libro de tu vida."',
+    icon: '',
+    heroBg: 'linear-gradient(135deg, #170a04 0%, #1a1a0e 100%)',
+    description: `
+      <p class="event-section-label">Tu Celebración</p>
+      <h2 class="event-section-title">Un Regalo <em>Inolvidable</em></h2>
+      <div class="event-text">
+        <p>Sorprende a quien más quieres con el regalo más original: música en vivo personalizada para su cumpleaños. Sea una íntima reunión familiar o una gran fiesta, el violín añade una dimensión especial que ningún otro detalle puede ofrecer.</p>
+        <p>Desde el clásico "Happy Birthday" interpretado de manera virtuosa, hasta una selección de temas favoritos del homenajeado, adapto el repertorio para que cada momento sea especial.</p>
+        <p>Disponible para celebraciones de todas las escalas: desde sorpresas íntimas de 10 personas hasta grandes fiestas de 200 invitados.</p>
+      </div>
+    `,
+    moments: [
+      { icon:'', name:'Sorpresa de Entrada', desc:'Una llegada musical que deja a todos sin palabras' },
+      { icon:'', name:'Momento de las Velas', desc:'Happy Birthday como nunca lo habías escuchado' },
+      { icon:'', name:'Brindis', desc:'Música elegante para el discurso y el brindis' },
+      { icon:'', name:'Cena o Almuerzo', desc:'Repertorio suave y agradable durante el banquete' },
+      { icon:'', name:'Celebración General', desc:'Ambiente musical festivo para toda la reunión' },
+    ],
+    repertorio: [
+      { song:'Happy Birthday (Violín)', artist:'Tradicional' },
+      { song:'My Way', artist:'Frank Sinatra' },
+      { song:'Unforgettable', artist:'Nat King Cole' },
+      { song:'La Vie en Rose', artist:'Édith Piaf' },
+      { song:'Besame Mucho', artist:'C. Velázquez' },
+      { song:'River Flows in You', artist:'Yiruma' },
+    ]
+  },
+  'holidays': {
+    eyebrow: 'Música Navideña',
+    titleMain: 'Holidays',
+    titleEm: 'El Espíritu de la Música',
+    tagline: '"La Navidad suena más bonita cuando la toca un violín."',
+    icon: '',
+    heroBg: 'linear-gradient(135deg, #170a04 0%, #0e0e1a 100%)',
+    description: `
+      <p class="event-section-label">Navidad & Año Nuevo</p>
+      <h2 class="event-section-title">Magia <em>Navideña</em></h2>
+      <div class="event-text">
+        <p>La temporada de Navidad y Año Nuevo es mágica por sí sola, pero con música de violín en vivo alcanza una dimensión completamente diferente. Clásicos navideños, villancicos y temas del espíritu festivo interpretados con maestría.</p>
+        <p>Ideal para cenas familiares, eventos corporativos de fin de año, posadas, galas navideñas y cualquier celebración de la temporada decembrina. El repertorio incluye los grandes clásicos navideños en versiones elegantes y emotivas.</p>
+        <p>También disponible para el Año Nuevo, con un repertorio festivo y esperanzador que acompaña el brindis de medianoche.</p>
+      </div>
+    `,
+    moments: [
+      { icon:'', name:'Cena de Navidad', desc:'Villancicos y clásicos navideños durante la cena familiar' },
+      { icon:'', name:'Apertura de Regalos', desc:'Música festiva para el momento más esperado' },
+      { icon:'', name:'Brindis de Año Nuevo', desc:'La melodía perfecta para recibir el nuevo año' },
+      { icon:'', name:'Gala Corporativa', desc:'Ambiente navideño elegante para tu empresa' },
+      { icon:'', name:'Novenas y Posadas', desc:'Música sacra y villancicos tradicionales' },
+    ],
+    repertorio: [
+      { song:'Silent Night', artist:'Trad. Navideño' },
+      { song:'Jingle Bells', artist:'Trad. Navideño' },
+      { song:'O Holy Night', artist:'Trad. Navideño' },
+      { song:'Feliz Navidad', artist:'José Feliciano' },
+      { song:'White Christmas', artist:'Bing Crosby' },
+      { song:'Auld Lang Syne', artist:'Trad. Año Nuevo' },
+    ]
+  },
+  'misas': {
+    eyebrow: 'Música Sacra',
+    titleMain: 'Misas',
+    titleEm: 'Fe y Espiritualidad',
+    tagline: '"La música sacra eleva el alma hacia lo trascendente."',
+    icon: '',
+    heroBg: 'linear-gradient(135deg, #170807 0%, #100e1a 100%)',
+    description: `
+      <p class="event-section-label">Música Sacra</p>
+      <h2 class="event-section-title">Elevar el <em>Espíritu</em></h2>
+      <div class="event-text">
+        <p>La música sacra ha sido durante siglos el puente entre lo humano y lo divino. Con una profunda comprensión y respeto por la liturgia, ofrezco acompañamiento musical para misas de cualquier tipo: matrimoniales, de primera comunión, de confirmación, y ceremonias religiosas en general.</p>
+        <p>Mi repertorio sacro incluye las piezas más significativas del repertorio clásico religioso, interpretadas con la solemnidad y reverencia que cada momento merece.</p>
+        <p>Trabajo en coordinación con el celebrante y la familia para asegurar que la música fluya naturalmente con el rito litúrgico.</p>
+      </div>
+    `,
+    moments: [
+      { icon:'', name:'Entrada Procesional', desc:'Ave María, Canto a la Virgen u otra pieza de su elección' },
+      { icon:'', name:'Lecturas', desc:'Música instrumental suave entre lecturas' },
+      { icon:'', name:'Ofertorio', desc:'Melodía de recogimiento durante la ofrenda' },
+      { icon:'', name:'Comunión', desc:'Piezas contemplativas y espirituales' },
+      { icon:'', name:'Salida', desc:'Música jubilosa para la procesión de salida' },
+    ],
+    repertorio: [
+      { song:'Ave María', artist:'Schubert' },
+      { song:'Ave María', artist:'Bach/Gounod' },
+      { song:'Pie Jesu', artist:'Fauré' },
+      { song:'Panis Angelicus', artist:'César Franck' },
+      { song:'Jesu, Joy of Man\'s Desiring', artist:'Bach' },
+      { song:'Laudate Dominum', artist:'Mozart' },
+    ]
+  },
+  'exequias': {
+    eyebrow: 'Acompañamiento',
+    titleMain: 'Exequias',
+    titleEm: 'Despedidas con Dignidad',
+    tagline: '"La música consuela cuando las palabras no alcanzan."',
+    icon: '',
+    heroBg: 'linear-gradient(135deg, #170807 0%, #0e0e0e 100%)',
+    description: `
+      <p class="event-section-label">Acompañamiento Respetuoso</p>
+      <h2 class="event-section-title">Música que <em>Consuela</em></h2>
+      <div class="event-text">
+        <p>En los momentos más difíciles, la música ofrece un consuelo que va más allá de las palabras. Con profundo respeto y sensibilidad, acompaño el último adiós con melodías que honran la vida y ayudan a sanar el dolor.</p>
+        <p>El repertorio para exequias está cuidadosamente seleccionado para transmitir paz, esperanza y gratitud por una vida vivida. Trabajo con las familias para incluir canciones significativas que representen al ser querido.</p>
+        <p>Mi presencia es discreta, respetuosa y completamente orientada al servicio de la familia y los deudos.</p>
+      </div>
+    `,
+    moments: [
+      { icon:'', name:'Velorio', desc:'Música de fondo serena durante la vigilia' },
+      { icon:'', name:'Misa de Exequias', desc:'Acompañamiento litúrgico completo' },
+      { icon:'', name:'Despedida Final', desc:'La melodía elegida por la familia para el último adiós' },
+      { icon:'', name:'Entierro', desc:'Acompañamiento musical respetuoso' },
+    ],
+    repertorio: [
+      { song:'Ave María', artist:'Schubert' },
+      { song:'Pie Jesu', artist:'Fauré' },
+      { song:'Lacrimosa', artist:'Mozart' },
+      { song:'Lágrimas del Cielo', artist:'Tradicional' },
+      { song:'El Cóndor Pasa', artist:'D. Robles' },
+      { song:'Amazing Grace', artist:'Tradicional' },
+    ]
+  },
+  'corporativos': {
+    eyebrow: 'Eventos Corporativos',
+    titleMain: 'Corporativos',
+    titleEm: 'Elegancia Empresarial',
+    tagline: '"La música distingue a las empresas que entienden que los detalles lo son todo."',
+    icon: '',
+    heroBg: 'linear-gradient(135deg, #170807 0%, #0e141a 100%)',
+    description: `
+      <p class="event-section-label">El Sello Diferenciador</p>
+      <h2 class="event-section-title">Eventos que <em>Impresionan</em></h2>
+      <div class="event-text">
+        <p>En el mundo empresarial, los detalles definen la imagen. La música en vivo de violín transforma cualquier evento corporativo en una experiencia memorable que refuerza la identidad y los valores de tu empresa.</p>
+        <p>Desde cenas de gala y lanzamientos de productos hasta convenciones de ventas y cenas de fin de año, ofrezco un servicio profesional y de alto nivel que complementa perfectamente la excelencia que tu empresa representa.</p>
+        <p>El repertorio se adapta al tono del evento: ambiente sofisticado para cenas ejecutivas, música animada para celebraciones de logros, o elegantes piezas de fondo para cocktails y recepciones.</p>
+      </div>
+    `,
+    moments: [
+      { icon:'', name:'Recepción y Registro', desc:'Música de fondo elegante para la bienvenida' },
+      { icon:'', name:'Cena Ejecutiva', desc:'Ambiente refinado durante el banquete' },
+      { icon:'', name:'Premiaciones', desc:'Fanfarria musical para los momentos de reconocimiento' },
+      { icon:'', name:'Lanzamiento de Productos', desc:'Música impactante para revelar algo nuevo' },
+      { icon:'', name:'Brindis de Cierre', artist:'Melodía perfecta para cerrar con éxito' },
+    ],
+    repertorio: [
+      { song:'Con Te Partirò', artist:'Bocelli' },
+      { song:'La Vie en Rose', artist:'Édith Piaf' },
+      { song:'Fly Me to the Moon', artist:'Sinatra' },
+      { song:'My Way', artist:'Frank Sinatra' },
+      { song:'Misty', artist:'Erroll Garner' },
+      { song:'Czardas', artist:'Monti' },
+    ]
+  },
+  'aniversarios': {
+    eyebrow: 'Celebración de Amor',
+    titleMain: 'Aniversarios',
+    titleEm: 'El Amor que Perdura',
+    tagline: '"La música que sonó en vuestro primer baile merece sonar de nuevo."',
+    icon: '',
+    heroBg: 'linear-gradient(135deg, #2a0e08 0%, #1a0a0a 100%)',
+    description: `
+      <p class="event-section-label">Renovar el Amor</p>
+      <h2 class="event-section-title">Historias de <em>Amor</em></h2>
+      <div class="event-text">
+        <p>Un aniversario es la celebración de una historia de amor que sigue escribiéndose. ¿Qué mejor manera de honrar ese vínculo especial que con la música que los acompañó en los momentos más importantes?</p>
+        <p>Desde el aniversario número uno hasta las bodas de oro y más allá, personalizo el repertorio con las canciones que tienen significado especial para la pareja: la canción del primer baile, la melodía de la boda, las piezas favoritas de ambos.</p>
+        <p>Puedo organizar desde una íntima serenata sorpresa hasta un concierto privado para una cena romántica, adaptándome completamente a vuestras ideas.</p>
+      </div>
+    `,
+    moments: [
+      { icon:'', name:'Cena Romántica', desc:'Música de fondo perfecta para una velada íntima' },
+      { icon:'', name:'Primer Baile Renovado', desc:'Aquella canción especial, interpretada de nuevo' },
+      { icon:'', name:'Brindis de Amor', desc:'La melodía perfecta para el momento del brindis' },
+      { icon:'', name:'Sorpresa Musical', desc:'Una serenata para sorprender a tu pareja' },
+      { icon:'', name:'Sesión Fotográfica', desc:'Música en vivo para fotos del aniversario' },
+    ],
+    repertorio: [
+      { song:'A Thousand Years', artist:'Christina Perri' },
+      { song:'Perfect', artist:'Ed Sheeran' },
+      { song:'My Heart Will Go On', artist:'Celine Dion' },
+      { song:'Besame Mucho', artist:'C. Velázquez' },
+      { song:'Can\'t Help Falling in Love', artist:'Elvis Presley' },
+      { song:'Endless Love', artist:'Diana Ross' },
+    ]
+  },
+  'quince': {
+    eyebrow: 'Quinceañera',
+    titleMain: 'Quince Años',
+    titleEm: 'La Noche más Especial',
+    tagline: '"Quince años son el umbral entre la niña que fuiste y la mujer que serás."',
+    icon: '',
+    heroBg: 'linear-gradient(135deg, #2a0e08 0%, #1a0e14 100%)',
+    description: `
+      <p class="event-section-label">Tu Gran Noche</p>
+      <h2 class="event-section-title">Una Celebración <em>Única</em></h2>
+      <div class="event-text">
+        <p>Los quince años son mucho más que una fiesta: son el inicio de una nueva etapa. Esta celebración merece una atmósfera musical que mezcle la elegancia de la tradición con la frescura de los gustos de la quinceañera.</p>
+        <p>Desde el vals de honor hasta la música de la recepción, trabajo con la quinceañera y su familia para crear una selección musical que refleje su personalidad única.</p>
+        <p>Puedo interpretar desde el clásico vals de quince hasta versiones instrumentales de sus canciones favoritas del momento, creando así una experiencia musical completamente personalizada.</p>
+      </div>
+    `,
+    moments: [
+      { icon:'', name:'Entrada de la Quinceañera', desc:'Una entrada espectacular que deja a todos sin aliento' },
+      { icon:'', name:'Vals Principal', desc:'El baile de honor con el papá, lleno de emoción' },
+      { icon:'', name:'Entrega del Ramo', desc:'El momento simbólico acompañado musicalmente' },
+      { icon:'', name:'Brindis Familiar', desc:'La melodía del brindis para la futura mujer' },
+      { icon:'', name:'Pastel de Quince', artist:'Música festiva para el momento del pastel' },
+      { icon:'', name:'Apertura de Baile', desc:'El inicio de la fiesta con el ritmo perfecto' },
+    ],
+    repertorio: [
+      { song:'A Thousand Years', artist:'Christina Perri' },
+      { song:'Happy Birthday (Violin)', artist:'Tradicional' },
+      { song:'Vals de Strauss', artist:'Strauss' },
+      { song:'Quién Eres Tú', artist:'María Isabel' },
+      { song:'Juramento de Amor', artist:'Tradicional' },
+      { song:'River Flows in You', artist:'Yiruma' },
+    ]
+  },
+  'serenatas': {
+    eyebrow: 'Serenata Romántica',
+    titleMain: 'Serenatas',
+    titleEm: 'La Declaración más Bella',
+    tagline: '"Un violín bajo tu ventana dice lo que las palabras nunca podrán."',
+    icon: '',
+    heroBg: 'linear-gradient(135deg, #2a0e08 0%, #1a0e0e 100%)',
+    description: `
+      <p class="event-section-label">El Gesto más Romántico</p>
+      <h2 class="event-section-title">Amor en <em>Música Viva</em></h2>
+      <div class="event-text">
+        <p>Una serenata es quizás el gesto romántico más puro y atemporal que existe. Sorprende a la persona que amas con un momento mágico que no olvidará jamás: mi violín llevando tu mensaje de amor directo a su corazón.</p>
+        <p>Diseñamos juntos el momento perfecto: eliges las canciones, el lugar y la hora. Yo me encargo de que todo salga perfecto. Desde una simple sorpresa espontánea hasta una producción más elaborada con rosas y luces.</p>
+        <p>Ideal para declaraciones de amor, propuestas de matrimonio, reconciliaciones, San Valentín y cualquier momento en que quieras demostrar cuánto te importa alguien.</p>
+      </div>
+    `,
+    moments: [
+      { icon:'', name:'Serenata Sorpresa', desc:'El elemento sorpresa que multiplica la emoción' },
+      { icon:'', name:'Propuesta de Matrimonio', desc:'El fondo musical perfecto para el "¿Te casas conmigo?"' },
+      { icon:'', name:'San Valentín', desc:'El regalo más original el día del amor' },
+      { icon:'', name:'Cena Romántica', artist:'Música en vivo para una velada de dos' },
+      { icon:'', name:'Serenata Nocturna', desc:'La tradición romántica más pura y bella' },
+    ],
+    repertorio: [
+      { song:'Besame Mucho', artist:'C. Velázquez' },
+      { song:'La Vie en Rose', artist:'Édith Piaf' },
+      { song:'Can\'t Help Falling in Love', artist:'Elvis Presley' },
+      { song:'Perfect', artist:'Ed Sheeran' },
+      { song:'Romance de Amor', artist:'Tradicional' },
+      { song:'Quizás, Quizás, Quizás', artist:'Osvaldo Farrés' },
+    ]
+  }
+};
+
+const ALL_SERVICES = [
+  { id:'bodas', name:'Bodas', icon:'' },
+  { id:'cumpleanos', name:'Cumpleaños', icon:'' },
+  { id:'holidays', name:'Festividades', icon:'' },
+  { id:'misas', name:'Misas', icon:'' },
+  { id:'exequias', name:'Exequias', icon:'' },
+  { id:'corporativos', name:'Corporativos', icon:'' },
+  { id:'aniversarios', name:'Aniversarios', icon:'' },
+  { id:'quince', name:'Quince Años', icon:'' },
+  { id:'serenatas', name:'Serenatas', icon:'' },
+];
+
+// Get event ID from filename
+function getEventId() {
+  const path = window.location.pathname;
+  const file = path.split('/').pop().replace('.html','');
+  return file.replace('evento-', '');
+}
+
+function init() {
+  const id = getEventId();
+  const ev = EVENTS[id];
+  if (!ev) { window.location.href='index.html'; return; }
+
+  document.title = ev.titleMain + ' — Javier Guaima Violinista';
+  document.getElementById('breadcrumbName').textContent = ev.titleMain;
+  document.getElementById('heroEyebrow').textContent = ev.eyebrow;
+  document.getElementById('heroBg').style.background = ev.heroBg;
+  document.getElementById('heroBg').textContent = ev.icon;
+  document.getElementById('eventTitle').innerHTML = ev.titleMain + '<em>' + ev.titleEm + '</em>';
+  document.getElementById('eventTagline').textContent = ev.tagline;
+  document.getElementById('eventDescription').innerHTML = ev.description;
+
+  // Photo grid
+  const photoGrid = document.getElementById('photoGrid');
+  const photoEmojis = [ev.icon, '', '', ''];
+  photoGrid.innerHTML = photoEmojis.map((e,i)=>
+    `<div class="photo-item ${i===0?'photo-tall':''}">
+      <div class="photo-placeholder">${e}</div>
+    </div>`
+  ).join('');
+
+  // Moments
+  if (ev.moments && ev.moments.length) {
+    document.getElementById('momentsSection').innerHTML = `
+      <div class="content-grid reverse">
+        <div>
+          <p class="event-section-label">Durante tu Evento</p>
+          <h2 class="event-section-title">Momentos <em>Musicales</em></h2>
+          <ul class="moments-list">
+            ${ev.moments.map(m=>`
+              <li>
+                <div class="moment-icon">${m.icon}</div>
+                <div>
+                  <div class="moment-name">${m.name}</div>
+                  <div class="moment-desc">${m.desc||''}</div>
+                </div>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+        <div style="padding-top:3rem;">
+          <div style="background:var(--dark2);border:1px solid rgba(182,115,82,0.1);border-radius:4px;padding:2.5rem;text-align:center;">
+            <div style="font-size:5rem;margin-bottom:1.5rem;">${ev.icon}</div>
+            <p class="event-section-label">¿Listo para comenzar?</p>
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--white);margin-bottom:1rem;">Agenda una <em style="color:var(--gold);font-style:italic;">consulta gratuita</em></h3>
+            <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.7;margin-bottom:1.5rem;">Cuéntame sobre tu evento y te envío una propuesta personalizada sin ningún compromiso.</p>
+            <a href="cotizar.html" class="btn-primary">Solicitar Cotización</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Repertorio section
+  if (ev.repertorio) {
+    document.getElementById('repertorioSection').innerHTML = `
+      <p class="event-section-label">Canciones Destacadas</p>
+      <h2 class="event-section-title" style="text-align:center;">Repertorio para <em>${ev.titleMain}</em></h2>
+      <div class="rep-grid">
+        ${ev.repertorio.map(r=>`
+          <div class="rep-item">
+            <div class="rep-song">${r.song}</div>
+            <div class="rep-artist">${r.artist}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div style="text-align:center;margin-top:2rem;">
+        <a href="repertorio.html" class="btn-outline">Ver Repertorio Completo →</a>
+      </div>
+    `;
+  }
+
+  // Other services strip
+  const strip = document.getElementById('servicesStrip');
+  ALL_SERVICES.filter(s => s.id !== id).forEach(s => {
+    strip.innerHTML += `<a href="evento-${s.id}.html" class="service-pill">${s.icon} ${s.name}</a>`;
+  });
+}
+
+init();
+</script>
+</body>
+</html>
